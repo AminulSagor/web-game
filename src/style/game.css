@@ -1,5 +1,4 @@
-/* src/styles/game.css */
-
+/* Reset Styles */
 body {
     margin: 0;
     overflow: hidden;
@@ -16,78 +15,91 @@ body {
     position: relative;
     width: 100vw;
     height: 100vh;
+    cursor: crosshair;
 }
 
-/* Target styling */
+/* 🎯 Target Styling */
 .target {
     position: absolute;
     width: 80px;
     height: 80px;
-    cursor: crosshair;
-    transition: top 0.6s ease-in-out, left 0.6s ease-in-out;
-    filter: drop-shadow(2px 2px 5px rgba(255, 0, 0, 0.8));
+    border-radius: 50%;
+    transition: top 1s ease-in-out, left 1s ease-in-out;
 }
 
-/* Gun container */
+/* 🔫 Machine Gun Styling */
+/* Gun container now rotates */
 .gun-container {
     position: absolute;
     bottom: 5%;
     left: 50%;
-    transform: translateX(-50%);
+    transform-origin: bottom center; /* Rotate from the base */
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 }
 
-/* Gun body */
+/* Gun Body */
 .gun-body {
     position: relative;
-    width: 120px;
-    height: 40px;
+    width: 180px;
+    height: 50px;
     background: black;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
-/* Gun barrel */
+/* Gun Barrel */
 .gun-barrel {
     position: absolute;
-    right: -30px;
-    top: 10px;
-    width: 40px;
+    right: -50px; /* Extends outward */
+    top: 15px;
+    width: 60px; /* Barrel length */
     height: 10px;
+    background: gray;
+    border-radius: 5px;
+}
+
+
+
+/* Gun Handle */
+.gun-handle {
+    position: absolute;
+    left: 20px;
+    bottom: -25px;
+    width: 40px;
+    height: 50px;
     background: black;
     border-radius: 5px;
 }
 
-/* Gun trigger */
+/* Gun Stock */
+.gun-stock {
+    position: absolute;
+    left: -40px;
+    top: 10px;
+    width: 40px;
+    height: 20px;
+    background: black;
+    border-radius: 5px;
+}
+
+/* Gun Trigger */
 .gun-trigger {
     position: absolute;
-    left: 25px;
-    bottom: -12px;
-    width: 20px;
+    left: 40px;
+    bottom: -15px;
+    width: 15px;
     height: 20px;
-    border: 4px solid black;
+    border: 3px solid black;
     border-radius: 50%;
 }
 
-/* Gun grip */
-.gun-grip {
-    position: absolute;
-    left: 10px;
-    bottom: -20px;
-    width: 30px;
-    height: 40px;
-    background: black;
-    border-radius: 5px;
-}
-
-/* Muzzle flash effect */
+/* 🔥 Muzzle Flash Effect */
 .muzzle-flash {
     position: absolute;
-    right: -50px;
-    top: 10px;
-    width: 40px;
+    right: -60px;
+    top: 15px;
+    width: 50px;
     height: 20px;
     background: orange;
     border-radius: 50%;
@@ -102,7 +114,7 @@ body {
 @keyframes muzzleFlash {
     0% {
         opacity: 1;
-        transform: scale(1.2);
+        transform: scale(1.5);
     }
     100% {
         opacity: 0;
@@ -110,7 +122,7 @@ body {
     }
 }
 
-/* Shooting animation */
+/* 🔄 Machine Gun Recoil */
 .shooting .gun-body {
     animation: gunRecoil 0.1s ease-in-out;
 }
@@ -120,29 +132,82 @@ body {
         transform: translateX(0);
     }
     50% {
-        transform: translateX(-5px);
+        transform: translateX(-7px);
     }
     100% {
         transform: translateX(0);
     }
 }
 
-/* Scoreboard */
-.scoreboard {
+/* 🔥 Fire Explosion Effect */
+.fire-effect {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 24px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    color: #fff;
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(255,165,0,0.9) 20%, rgba(255,69,0,0.8) 40%, rgba(255,0,0,0.7) 60%, rgba(0,0,0,0) 100%);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 20px rgba(255, 165, 0, 0.9),
+        0 0 30px rgba(255, 69, 0, 0.8),
+        0 0 40px rgba(255, 0, 0, 0.7);
+    animation: fireAnimation 0.6s ease-out forwards, flicker 0.1s infinite alternate;
+    pointer-events: none;
+    opacity: 1;
 }
 
-/* Hover effects for better UX */
-.gun-container:hover {
-    transform: translateX(-50%) scale(1.05);
+/* Fire explosion animation */
+@keyframes fireAnimation {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
 }
 
+/* Flickering effect for fire */
+@keyframes flicker {
+    0% {
+        filter: brightness(1.5) contrast(1.2);
+    }
+    100% {
+        filter: brightness(2) contrast(1.4);
+    }
+}
+
+/* 🔫 Bullet Styling */
+.bullet {
+    position: absolute;
+    width: 5px; /* Smaller bullet for machine gun */
+    height: 5px;
+    background-color: yellow;
+    border-radius: 50%;
+    transition: top 0.5s linear, left 0.5s linear;
+}
+
+/* 🏆 Scoreboard */
+.scoreboard {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* 🔥 Hide Target When Fire Effect is Active */
+.target.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+}
