@@ -3,6 +3,7 @@ import { Howl } from "howler";
 import Bullet from "./Bullet";
 import "../style/game.css";
 import Target from "./Target";
+import { updateUserScore } from '../services/api'; 
 
 const gunfireSound = new Howl({
   src: ["/assets/gun.mp3"],
@@ -10,7 +11,7 @@ const gunfireSound = new Howl({
   rate: 1.2,
 });
 
-const Gun = () => {
+const Gun = ({ email }) => { 
   const [bullets, setBullets] = useState([]);
   const [score, setScore] = useState(0);
   const [target, setTarget] = useState({ left: 300, top: 200 });
@@ -71,6 +72,21 @@ const Gun = () => {
     clearInterval(shootingInterval.current);
     shootingInterval.current = null;
   };
+
+  useEffect(() => {
+    if (score === 0) return; 
+
+    const updateScore = async () => {
+      try {
+        console.log("Updating score for:", email, "New Score:", score);
+        await updateUserScore(email, score);
+      } catch (error) {
+        console.error("Error updating score:", error);
+      }
+    };
+
+    updateScore();
+  }, [score, email]);
 
   return (
     <div
