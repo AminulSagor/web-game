@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../style/game.css";
 
-const Target = ({ position, setPosition }) => {
+const Target = ({ position, setPosition, isPaused }) => {
   const [isHit, setIsHit] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
     const moveTarget = () => {
       setIsHit(false); // Reset fire effect when target moves
       const newTop = Math.random() * 80 + "%";
@@ -14,7 +15,7 @@ const Target = ({ position, setPosition }) => {
 
     const interval = setInterval(moveTarget, 1500);
     return () => clearInterval(interval);
-  }, [setPosition]);
+  }, [setPosition, isPaused]);
 
   return (
     <img

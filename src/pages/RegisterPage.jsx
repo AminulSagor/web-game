@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { registerUser } from "../services/api";
-import { validateEmail, validateName } from "../utils/validation";
+import { validateEmail} from "../utils/validation";
 import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
@@ -12,38 +12,29 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Check if fields are empty
+
     if (email.trim() === "") {
       setError("Email cannot be empty");
       return;
     }
   
-
+  
     if (!validateEmail(email)) {
       setError("Invalid email format");
       return;
     }
   
-
-    const userName = name.trim() === "" ? email.split("@")[0] : name;
-  
-
-    if (userName !== email.split("@")[0] && !validateName(userName)) {
-      setError("Name must be at least 3 characters long");
-      return;
-    }
-  
-    setError(""); 
     try {
-      const response = await registerUser({ name: userName, email });
-      console.log("User registered:", response);
-      navigate("/game"); // Navigate to the game page after success
+      await registerUser({ name: name || email.split("@")[0], email });
+  
+      localStorage.setItem("email", email); // ✅ Store email in localStorage
+      navigate("/game"); // Redirect to game
     } catch (err) {
       setError("Error registering user");
       console.error(err);
     }
   };
+  
   
 
 
@@ -53,8 +44,10 @@ const RegisterForm = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#f4f4f4",
+        width: "100vw",  // ✅ Full width of the viewport
+        height: "100vh", // ✅ Full height of the viewport
+        backgroundColor: "#f0f0f0" ,  // Light blue
+
         margin: "0", // Ensure no margin issues affect centering
       }}
     >

@@ -3,7 +3,8 @@ import { Howl } from "howler";
 import Bullet from "./Bullet";
 import "../style/game.css";
 import Target from "./Target";
-import { updateUserScore } from '../services/api'; 
+import { getGameUserScore, getAllUsersScores  ,updateUserScore} from '../services/api'; 
+
 
 const gunfireSound = new Howl({
   src: ["/assets/gun.mp3"],
@@ -11,13 +12,78 @@ const gunfireSound = new Howl({
   rate: 1.2,
 });
 
-const Gun = ({ email }) => { 
+const Gun = () => { 
   const [bullets, setBullets] = useState([]);
   const [score, setScore] = useState(0);
   const [target, setTarget] = useState({ left: 300, top: 200 });
   const [gunAngle, setGunAngle] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [leaderboard, setLeaderboard] = useState([]);
   const shootingInterval = useRef(null);
   const barrelRef = useRef(null);
+  const [isLeaderboardExpanded, setIsLeaderboardExpanded] = useState(false);
+  const [userEmail, setUserEmail] = useState(localStorage.getItem("email"));
+  useEffect(() => {
+    const checkEmailUpdate = () => {
+      const latestEmail = localStorage.getItem("email");
+      if (latestEmail !== userEmail) {
+        setUserEmail(latestEmail); // ✅ Update state if email changes
+      }
+    };
+
+    // ✅ Listen for storage changes (e.g., new user registers)
+    window.addEventListener("storage", checkEmailUpdate);
+
+    return () => {
+      window.removeEventListener("storage", checkEmailUpdate);
+    };
+  }, [userEmail]);
+
+  useEffect(() => {
+    const fetchUserScore = async () => {
+      const storedEmail = localStorage.getItem("email");
+      if (!storedEmail) {
+        console.error("No email found in localStorage!");
+        return;
+      }
+  
+      try {
+        console.log("Fetching score for:", storedEmail);
+        const existingScore = await getGameUserScore(storedEmail);
+  
+        if (existingScore !== undefined) {
+          setScore(existingScore); // ✅ Set fetched score
+          console.log("User's existing score:", existingScore);
+        } else {
+          console.warn("Fetched score was undefined, setting to 0");
+          setScore(0);
+        }
+      } catch (error) {
+        console.error("Error fetching user score:", error);
+      }
+    };
+  
+    fetchUserScore(); // ✅ Fetch when entering the page
+  }, []); // ✅ No dependencies, runs every time the page loads
+  
+
+  useEffect(() => {
+    if (score === null || score === undefined || !userEmail) return; // ✅ Ensure valid score
+    if (score === 0) return;
+
+    const updateScore = async () => {
+      try {
+        console.log("Updating score for:", userEmail, "New Score:", score);
+        await updateUserScore(userEmail, score);
+      } catch (error) {
+        console.error("Error updating score:", error);
+      }
+    };
+
+    updateScore();
+  }, [score, userEmail]);
+
+
 
   const calculateGunAngle = (mouseX, mouseY) => {
     const gunX = window.innerWidth / 2;
@@ -42,7 +108,7 @@ const Gun = ({ email }) => {
   };
 
   const startShooting = (event) => {
-    if (shootingInterval.current) return;
+    if (shootingInterval.current || isPaused) return;
 
     setGunAngle(calculateGunAngle(event.clientX, event.clientY));
 
@@ -59,7 +125,6 @@ const Gun = ({ email }) => {
         targetY: event.clientY,
       };
 
-      console.log("New Bullet:", newBullet);
       setBullets((prevBullets) => [...prevBullets, newBullet]);
 
       setTimeout(() => {
@@ -78,15 +143,30 @@ const Gun = ({ email }) => {
 
     const updateScore = async () => {
       try {
-        console.log("Updating score for:", email, "New Score:", score);
-        await updateUserScore(email, score);
+       
+        await updateUserScore(userEmail, score);
       } catch (error) {
         console.error("Error updating score:", error);
       }
     };
 
     updateScore();
-  }, [score, email]);
+  }, [score, userEmail]);
+
+
+  const toggleLeaderboard = async () => {
+    setIsLeaderboardExpanded((prev) => !prev);
+  
+    if (!isLeaderboardExpanded) {  // Fetch leaderboard when opening
+      try {
+        const usersScores = await getAllUsersScores();
+        setLeaderboard(usersScores);
+      } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+      }
+    }
+  };
+  
 
   return (
     <div
@@ -96,8 +176,40 @@ const Gun = ({ email }) => {
       onMouseLeave={stopShooting}
       onMouseMove={(event) => setGunAngle(calculateGunAngle(event.clientX, event.clientY))}
     >
+      
+      
+       {/* Scoreboard */}
+  {/* Scoreboard */}
+  <div className="scoreboard">Score: {score}</div>
+
+{/* Leaderboard Toggle Button */}
+<button className="leaderboard-toggle" onClick={toggleLeaderboard}>
+  {isLeaderboardExpanded ? "Close Leaderboard ❌" : "🏆 Leaderboard"}
+</button>
+
+{/* Leaderboard Section */}
+{isLeaderboardExpanded && (
+  <div className={`leaderboard ${isLeaderboardExpanded ? "expanded" : "collapsed"}`}>
+    <h2>Top Players</h2>
+    <ol>
+      {leaderboard.map((player, index) => (
+        <li key={index}>
+          <span className="player-name">{player.name}</span>
+          <span className="player-score">{player.score}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+)}
+
+
       <div className="scoreboard">Score: {score}</div>
-      <Target position={target} setPosition={setTarget} />
+      <button className="pause-button" onClick={() => setIsPaused((prev) => !prev)}>
+  {isPaused ? "Resume" : "Pause"}
+</button>
+
+<Target position={target} setPosition={setTarget} isPaused={isPaused} />
+
 
       <div className="gun-container" style={{ transform: `rotate(${gunAngle}deg)` }}>
         <div className="gun-body">
@@ -111,7 +223,7 @@ const Gun = ({ email }) => {
       {bullets.map((bullet) => (
         <Bullet
           key={bullet.id}
-          id={bullet.id} // Unique ID
+          id={bullet.id} 
           startX={bullet.startX}
           startY={bullet.startY}
           targetX={bullet.targetX}

@@ -1,25 +1,24 @@
 import { Routes, Route, BrowserRouter as Router, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import RegisterForm from "./pages/RegisterPage";
-import Gun from "./components/Gun";
+import GunManager from "./components/GunManager"; // Wrapper for dynamic switching
 import "./style/game.css";
 
 const App = () => {
-  const [email, setEmail] = useState(null);
   const navigate = useNavigate();
+  const [email, setEmail] = useState(localStorage.getItem("email") || null);
 
   const handleRegister = (userEmail) => {
     setEmail(userEmail);
-    navigate('/game');  // Navigate to the game page once the user is registered
+    localStorage.setItem("email", userEmail);
+    navigate('/game');
   };
 
   return (
-    <div className="game-container">
-      <Routes>
-        <Route path="/" element={<RegisterForm onRegister={handleRegister} />} />
-        <Route path="/game" element={<Gun email={email} onShoot={() => {}} />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<RegisterForm onRegister={handleRegister} />} />
+      <Route path="/game" element={<GunManager />} /> {/* Now using GunManager */}
+    </Routes>
   );
 };
 

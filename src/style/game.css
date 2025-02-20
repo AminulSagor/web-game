@@ -12,11 +12,19 @@ body {
 }
 
 .game-container {
-    position: relative;
+    position: fixed;  
+    top: 0;
+    left: 0;
     width: 100vw;
-    height: 100vh;
-    cursor: crosshair;
+    height: 100dvh; /* Fix for mobile viewport height */
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: none; 
 }
+
+
 
 /* 🎯 Target Styling */
 .target {
@@ -57,6 +65,43 @@ body {
     height: 10px;
     background: gray;
     border-radius: 5px;
+}
+
+/* 📱 Mobile-Specific Gun Adjustments */
+@media (max-width: 768px) {
+    .gun-container {
+        position: absolute;
+        bottom: 5%; /* Keep it near the bottom */
+        left: 40%; /* Move to center */
+        transform: translateX(-50%) scale(0.9); /* Center properly & slightly scale down */
+        transform-origin: bottom center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+
+    .gun-body {
+        width: 110px;  /* Reduce gun size */
+        height: 35px;
+    }
+
+    .gun-barrel {
+        right: -30px;
+        top: 10px;
+        width: 40px;
+        height: 8px;
+    }
+
+    .gun-handle {
+        width: 25px;
+        height: 40px;
+    }
+
+    .gun-stock {
+        width: 30px;
+        height: 15px;
+    }
 }
 
 
@@ -181,6 +226,19 @@ body {
     }
 }
 
+@media (max-width: 768px) {
+    .gun-barrel {
+        position: absolute;
+        right: -40px; /* Adjust based on mobile screen size */
+        top: 10px; /* Slightly higher for mobile */
+        width: 50px; /* Shorter barrel for mobile */
+        height: 8px; /* Slimmer barrel */
+        background: gray;
+        border-radius: 4px;
+    }
+}
+
+
 /* 🔫 Bullet Styling */
 .bullet {
     position: absolute;
@@ -211,3 +269,296 @@ body {
     visibility: hidden;
     transition: opacity 0.2s ease-in-out;
 }
+
+
+
+.pause-button {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+  
+  .pause-button:hover {
+    background-color: rgba(200, 0, 0, 0.9);
+    transform: scale(1.05);
+  }
+  
+  .pause-button:active {
+    background-color: rgba(180, 0, 0, 1);
+    transform: scale(0.95);
+  }
+  
+
+  /* 🏆 Leaderboard */
+/* 🏆 Leaderboard */
+.leaderboard {
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    width: 220px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+
+/* Leaderboard Expanded */
+.leaderboard.expanded {
+    width: 280px;
+    padding: 20px;
+}
+
+/* Leaderboard Title */
+.leaderboard h2 {
+    margin: 0 0 12px;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Trophy Icon */
+.leaderboard h2::before {
+    content: "🏆";
+    margin-right: 8px;
+}
+
+/* Player List */
+.leaderboard ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px; /* Prevents overflow */
+    overflow-y: auto;
+}
+
+/* Player Items */
+.leaderboard li {
+    padding: 6px 0;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    transition: background 0.3s ease-in-out;
+}
+
+/* Remove border from last item */
+.leaderboard li:last-child {
+    border-bottom: none;
+}
+
+/* Highlight Top Player */
+.leaderboard li:first-child {
+    font-weight: bold;
+    color: gold;
+    background: rgba(255, 223, 0, 0.2);
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/* Player Name */
+.leaderboard .player-name {
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* Player Score */
+.leaderboard .player-score {
+    font-weight: bold;
+    text-align: right;
+}
+
+/* Scrollbar Customization */
+.leaderboard ol::-webkit-scrollbar {
+    width: 6px;
+}
+
+.leaderboard ol::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+
+.leaderboard ol::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+/* 🏆 Leaderboard Toggle Button */
+.leaderboard-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .leaderboard-toggle {
+        position: fixed !important; /* Keep it in place on mobile */
+        top: 50px; /* Set top margin to 50px */
+        left: 50%;
+        transform: translateX(-55%) !important; /* Center the button horizontally */
+        width: 150px; /* Keep the button size normal */
+        z-index: 1001; /* Ensure it's always on top */
+    }
+}
+
+@media (max-width: 768px) {
+    .leaderboard {
+        width: 180px !important; /* Ensure width is enough */
+        font-size: 14px !important; /* Reduce font size for mobile */
+        padding: 10px !important; /* Adjust padding */
+        max-height: 300px !important; /* Ensure enough space */
+        overflow-y: auto !important; /* Enable scrolling */
+        display: block !important; /* Ensure items stack */
+    }
+
+    .leaderboard.expanded {
+        width: 220px !important; /* Adjust expanded size */
+        max-height: 350px !important; /* Allow more space */
+    }
+
+    /* Fix leaderboard list */
+    .leaderboard ol {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        max-height: 250px !important; /* Ensure list is scrollable */
+        overflow-y: auto !important;
+        display: block !important; /* Fix any flex-related issues */
+    }
+
+    /* Fix leaderboard player rows */
+    .leaderboard li {
+        padding: 8px 4px !important;
+        font-size: 12px !important;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+
+
+/* Toggle Button Hover */
+.leaderboard-toggle:hover {
+    background: rgba(50, 50, 50, 0.9);
+    transform: scale(1.05);
+}
+
+/* Toggle Button Active */
+.leaderboard-toggle:active {
+    background: rgba(30, 30, 30, 1);
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    /* Make Leaderboard Toggle Button Smaller */
+    .leaderboard-toggle {
+        font-size: 12px; /* Reduce font size */
+        padding: 4px 8px; /* Reduce padding */
+        top: 5px; /* Move closer to the edge */
+        right: 5px;
+        border-radius: 5px;
+    }
+
+    /* Make Pause Button Smaller */
+    .pause-button {
+        font-size: 12px; /* Reduce font size */
+        padding: 6px 12px; /* Reduce padding */
+        bottom: 8px; /* Adjust positioning */
+        left: 8px;
+        border-radius: 5px;
+    }
+
+    /* Make Scoreboard Smaller */
+    .scoreboard {
+        font-size: 14px; /* Reduce text size */
+        padding: 6px 10px; /* Reduce padding */
+        top: 5px; /* Adjust positioning */
+        left: 5px;
+        border-radius: 6px;
+    }
+
+    /* Reduce leaderboard size */
+    .leaderboard {
+        width: 160px; /* Narrower leaderboard */
+        font-size: 12px; /* Smaller text */
+        padding: 8px; /* Reduce padding */
+    }
+
+    .leaderboard.expanded {
+        width: 200px; /* Less expansion */
+    }
+
+    .leaderboard h2 {
+        font-size: 16px; /* Reduce header size */
+    }
+
+    .leaderboard li {
+        font-size: 12px; /* Smaller list text */
+    }
+
+    /* Reduce bullet point list size */
+    .leaderboard ol {
+        max-height: 200px; /* Reduce height */
+    }
+
+    /* Make scrollbar smaller */
+    .leaderboard ol::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .leaderboard ol::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 5px;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .pause-button {
+        font-size: 12px; /* Reduce text size */
+        padding: 6px 12px; /* Reduce padding */
+        bottom: auto; /* Adjust positioning */
+        left: auto;
+        width: auto;
+        transform: translateX(-50%);
+        border-radius: 5px;
+        min-width: 80px; /* Ensure proper touch size */
+    }
+
+    .pause-button:hover {
+        transform: scale(1.05) translateX(-50%);
+    }
+
+    .pause-button:active {
+        transform: scale(0.95) translateX(-50%);
+    }
+}
+
