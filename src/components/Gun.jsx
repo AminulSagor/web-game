@@ -109,6 +109,7 @@ const Gun = () => {
 
   const startShooting = (event) => {
     if (shootingInterval.current || isPaused) return;
+    if (event.target.closest("button")) return;
 
     setGunAngle(calculateGunAngle(event.clientX, event.clientY));
 

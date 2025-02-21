@@ -54,6 +54,7 @@ const GunMobile = () => {
 
   const handleTap = (event) => {
     if (isPaused) return;
+    if (event.target.closest("button")) return;
     const touch = event.touches[0];
   
     // Calculate gun rotation towards the tap
@@ -163,7 +164,7 @@ const GunMobile = () => {
 <button
   className="pause-button"
   onClick={() => setIsPaused(!isPaused)}
-  style={{
+  style={{ 
     position: "absolute",
     top: "10px", // Position closer to the bottom
     right: "10px",
