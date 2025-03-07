@@ -1,8 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "../style/game.css";
+import { Howl } from "howler";
 
 const Bullet = ({ id, startX, startY, targetX, targetY, onRemove, increaseScore }) => {
   const [position, setPosition] = useState({ left: `${startX}px`, top: `${startY}px` });
+
+  // 🔹 Retrieve character from localStorage
+  const character = localStorage.getItem("character") || "Allen";
+
+  // 🔹 Set fire image and sound dynamically
+  const fireImageSrc = character === "Allen" ? "/assets/Allen_Fire.png" : "/assets/Shaila_Fall.png";
+  const fireSoundSrc = character === "Allen" ? "/assets/Allen_got_shooted.wav" : "/assets/Shaila_got_shooted.wav";
+
+  const hitSound = new Howl({
+    src: [fireSoundSrc], // 🔥 Dynamically use the correct sound
+    volume: 0.8,
+  });
+
+  
 
   useEffect(() => {
     console.log(`Bullet ${id} spawned at`, startX, startY);
@@ -34,18 +49,20 @@ const Bullet = ({ id, startX, startY, targetX, targetY, onRemove, increaseScore 
           targetElement.style.opacity = "0";
           targetElement.style.visibility = "hidden";
 
-          const fireEffect = document.createElement("div");
-          fireEffect.classList.add("fire-effect");
-          fireEffect.style.left = `${targetRect.left + targetRect.width / 2}px`;
-          fireEffect.style.top = `${targetRect.top + targetRect.height / 2}px`;
+          const fireImage = document.createElement("img");
+          fireImage.src = fireImageSrc;
+          fireImage.classList.add("fire-image");
+          fireImage.style.left = `${targetRect.left + targetRect.width / 2 - 50}px`; // Adjust positioning
+          fireImage.style.top = `${targetRect.top + targetRect.height / 2 - 50}px`;  // Adjust positioning
 
-          document.querySelector(".game-container").appendChild(fireEffect);
+          document.querySelector(".game-container").appendChild(fireImage);
+
+          hitSound.play();
 
           setTimeout(() => {
-            fireEffect.remove();
+            fireImage.remove();
             targetElement.style.opacity = "1";
             targetElement.style.visibility = "visible";
-
           }, 600);
 
           onRemove();

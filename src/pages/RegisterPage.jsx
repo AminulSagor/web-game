@@ -28,7 +28,7 @@ const RegisterForm = () => {
       await registerUser({ name: name || email.split("@")[0], email });
   
       localStorage.setItem("email", email); // ✅ Store email in localStorage
-      navigate("/game"); // Redirect to game
+      navigate("/choose-character");
     } catch (err) {
       setError("Error registering user");
       console.error(err);

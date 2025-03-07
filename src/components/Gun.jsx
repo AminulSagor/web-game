@@ -23,6 +23,8 @@ const Gun = () => {
   const barrelRef = useRef(null);
   const [isLeaderboardExpanded, setIsLeaderboardExpanded] = useState(false);
   const [userEmail, setUserEmail] = useState(localStorage.getItem("email"));
+  const [character, setCharacter] = useState(localStorage.getItem("character") || "Allen");
+
   useEffect(() => {
     const checkEmailUpdate = () => {
       const latestEmail = localStorage.getItem("email");
@@ -209,7 +211,7 @@ const Gun = () => {
   {isPaused ? "Resume" : "Pause"}
 </button>
 
-<Target position={target} setPosition={setTarget} isPaused={isPaused} />
+<Target position={target} setPosition={setTarget} isPaused={isPaused} character={character} />
 
 
       <div className="gun-container" style={{ transform: `rotate(${gunAngle}deg)` }}>

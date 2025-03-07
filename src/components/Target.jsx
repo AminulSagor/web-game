@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../style/game.css";
 
-const Target = ({ position, setPosition, isPaused }) => {
+const Target = ({ position, setPosition, isPaused ,character}) => {
   const [isHit, setIsHit] = useState(false);
 
   useEffect(() => {
@@ -19,12 +19,13 @@ const Target = ({ position, setPosition, isPaused }) => {
 
   return (
     <img
-      src="/assets/target.jpg"
-      alt="Target"
+      src={character === "Allen" ? "/assets/Allen_Normal.png" : "/assets/Shaila_Normal.png"}
+      alt={character}
       className={`target ${isHit ? "fire-effect" : ""}`}
-      style={position}
+      style={{ ...position, width: "100px", height: "auto", position: "absolute" }}
     />
   );
+  
 };
 
 export default Target;

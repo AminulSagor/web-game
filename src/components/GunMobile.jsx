@@ -22,6 +22,8 @@ const GunMobile = () => {
   const [userEmail, setUserEmail] = useState(localStorage.getItem("email"));
   const [gunAngle, setGunAngle] = useState(0);
   const barrelRef = useRef(null);
+  const [character, setCharacter] = useState(localStorage.getItem("character") || "Allen");
+
 
   
 
@@ -184,7 +186,7 @@ const GunMobile = () => {
 
 
       {/* Target */}
-      <Target position={target} setPosition={setTarget} isPaused={isPaused} />
+      <Target position={target} setPosition={setTarget} isPaused={isPaused}  character={character}/>
 
       {/* Mobile-friendly Gun UI */}
       <div className="gun-container" style={{ transform: `rotate(${gunAngle}deg)` }}>

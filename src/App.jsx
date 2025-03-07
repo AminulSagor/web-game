@@ -1,6 +1,7 @@
 import { Routes, Route, BrowserRouter as Router, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import RegisterForm from "./pages/RegisterPage";
+import ChooseCharacter from "./pages/ChooseCharacter";
 import GunManager from "./components/GunManager"; // Wrapper for dynamic switching
 import "./style/game.css";
 
@@ -17,7 +18,8 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<RegisterForm onRegister={handleRegister} />} />
-      <Route path="/game" element={<GunManager />} /> {/* Now using GunManager */}
+      <Route path="/choose-character" element={<ChooseCharacter />} />
+      <Route path="/game" element={<GunManager />} />
     </Routes>
   );
 };
