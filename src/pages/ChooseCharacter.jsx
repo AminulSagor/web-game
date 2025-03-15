@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+
 
 const ChooseCharacter = () => {
   const navigate = useNavigate();
+
+  const [allenHoverSound, setAllenHoverSound] = useState(null);
+  const [shailaHoverSound, setShailaHoverSound] = useState(null);
+  
+  useEffect(() => {
+    setAllenHoverSound(new Audio("/assets/Allen_Intro.wav"));
+    setShailaHoverSound(new Audio("/assets/Shaila_Intro.wav"));
+  }, []);
+  
 
   const handleCharacterSelection = (character) => {
     localStorage.setItem("character", character); // ✅ Save choice in localStorage
@@ -104,7 +115,7 @@ const ChooseCharacter = () => {
       </style>
 
       <div className="choose-character-container">
-        <h2 className="choose-character-title">Choose a Character to Play With</h2>
+        <h2 className="choose-character-title">Choose a Character to Play</h2>
 
         <div className="character-selection">
           
@@ -112,8 +123,15 @@ const ChooseCharacter = () => {
           <div 
             className="character-box"
             onClick={() => handleCharacterSelection("Allen")}
+            onMouseEnter={() => {
+              if (allenHoverSound) {
+                allenHoverSound.currentTime = 0;
+                allenHoverSound.play().catch(error => console.log("Playback failed", error));
+              }
+            }}
+            
           >
-            <img src="/assets/Allen_Fire.png" alt="Allen" className="character-image" />
+            <img src="/assets/Allen_Normal.png" alt="Allen" className="character-image" />
             <h3 className="character-name">Allen</h3>
           </div>
 
@@ -121,8 +139,15 @@ const ChooseCharacter = () => {
           <div 
             className="character-box"
             onClick={() => handleCharacterSelection("Shaila")}
+            onMouseEnter={() => {
+              if (shailaHoverSound) {
+                shailaHoverSound.currentTime = 0;
+                shailaHoverSound.play().catch(error => console.log("Playback failed", error));
+              }
+            }}
+            
           >
-            <img src="/assets/Shaila_Fall.png" alt="Shaila" className="character-image" />
+            <img src="/assets/Shaila_Normal.png" alt="Shaila" className="character-image" />
             <h3 className="character-name">Shaila</h3>
           </div>
 

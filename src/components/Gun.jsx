@@ -110,32 +110,31 @@ const Gun = () => {
   };
 
   const startShooting = (event) => {
-    if (shootingInterval.current || isPaused) return;
-    if (event.target.closest("button")) return;
-
+    if (isPaused) return;
+    if (event.target.closest("button")) return; // Prevent shooting when clicking buttons
+  
     setGunAngle(calculateGunAngle(event.clientX, event.clientY));
-
-    shootingInterval.current = setInterval(() => {
-      gunfireSound.play();
-
-      const { x: startX, y: startY } = getBarrelEndpoint();
-      
-      const newBullet = {
-        id: Date.now(),
-        startX,
-        startY,
-        targetX: event.clientX,
-        targetY: event.clientY,
-      };
-
-      setBullets((prevBullets) => [...prevBullets, newBullet]);
-
-      setTimeout(() => {
-        setBullets((prevBullets) => prevBullets.filter((b) => b.id !== newBullet.id));
-      }, 500);
-    }, 100);
+  
+    gunfireSound.play(); // Play gunfire sound
+  
+    const { x: startX, y: startY } = getBarrelEndpoint();
+  
+    const newBullet = {
+      id: Date.now(),
+      startX,
+      startY,
+      targetX: event.clientX,
+      targetY: event.clientY,
+    };
+  
+    setBullets((prevBullets) => [...prevBullets, newBullet]);
+  
+    // Remove bullet after 500ms
+    setTimeout(() => {
+      setBullets((prevBullets) => prevBullets.filter((b) => b.id !== newBullet.id));
+    }, 500);
   };
-
+  
   const stopShooting = () => {
     clearInterval(shootingInterval.current);
     shootingInterval.current = null;

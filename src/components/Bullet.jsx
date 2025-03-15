@@ -10,7 +10,11 @@ const Bullet = ({ id, startX, startY, targetX, targetY, onRemove, increaseScore 
 
   // 🔹 Set fire image and sound dynamically
   const fireImageSrc = character === "Allen" ? "/assets/Allen_Fire.png" : "/assets/Shaila_Fall.png";
-  const fireSoundSrc = character === "Allen" ? "/assets/Allen_got_shooted.wav" : "/assets/Shaila_got_shooted.wav";
+  const fireSoundSrc = character === "Allen"
+  ? Math.random() < 0.5 
+    ? "/assets/Allen_got_shooted1.wav"  // Sound for even bullets
+    : "/assets/Allen_got_shooted2.wav"   // Sound for odd bullets
+  : "/assets/Shaila_got_shooted.wav";       // Single sound for Shaila
 
   const hitSound = new Howl({
     src: [fireSoundSrc], // 🔥 Dynamically use the correct sound
@@ -51,19 +55,36 @@ const Bullet = ({ id, startX, startY, targetX, targetY, onRemove, increaseScore 
 
           const fireImage = document.createElement("img");
           fireImage.src = fireImageSrc;
-          fireImage.classList.add("fire-image");
-          fireImage.style.left = `${targetRect.left + targetRect.width / 2 - 50}px`; // Adjust positioning
-          fireImage.style.top = `${targetRect.top + targetRect.height / 2 - 50}px`;  // Adjust positioning
+          fireImage.style.position = "absolute";
+          fireImage.style.width = "200px";
+          fireImage.style.height = "200px";
+          fireImage.style.left = `${targetRect.left + targetRect.width / 2 - 50}px`;
+          fireImage.style.top = `${targetRect.top + targetRect.height / 2 - 50}px`;
+
+          // 🔹 Initial state for smooth transition
+          fireImage.style.opacity = "0";
+          fireImage.style.transform = "scale(0.5)";
+          fireImage.style.transition = "opacity 0.3s ease-in-out, transform 0.3s ease-in-out";
 
           document.querySelector(".game-container").appendChild(fireImage);
 
+          // 🔹 Trigger fade-in effect after a short delay
+          setTimeout(() => {
+            fireImage.style.opacity = "1";
+            fireImage.style.transform = "scale(1)";
+          }, 50);
+
           hitSound.play();
 
+          // 🔹 Remove image smoothly
           setTimeout(() => {
-            fireImage.remove();
+            fireImage.style.opacity = "0";
+            fireImage.style.transform = "scale(0.5)";
+            setTimeout(() => fireImage.remove(), 300); // Remove after fade-out
             targetElement.style.opacity = "1";
             targetElement.style.visibility = "visible";
           }, 600);
+
 
           onRemove();
           clearInterval(checkCollision);
