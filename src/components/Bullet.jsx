@@ -53,11 +53,14 @@ const Bullet = ({ id, startX, startY, targetX, targetY, onRemove, increaseScore 
           targetElement.style.opacity = "0";
           targetElement.style.visibility = "hidden";
 
+          const isMobile = window.innerWidth < 768;
+          const fireImageSize = isMobile ? "60px" : "200px";
+
           const fireImage = document.createElement("img");
           fireImage.src = fireImageSrc;
           fireImage.style.position = "absolute";
-          fireImage.style.width = "200px";
-          fireImage.style.height = "200px";
+          fireImage.style.width = fireImageSize;
+          fireImage.style.height = fireImageSize;
           fireImage.style.left = `${targetRect.left + targetRect.width / 2 - 50}px`;
           fireImage.style.top = `${targetRect.top + targetRect.height / 2 - 50}px`;
 

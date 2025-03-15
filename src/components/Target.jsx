@@ -16,13 +16,14 @@ const Target = ({ position, setPosition, isPaused ,character}) => {
     const interval = setInterval(moveTarget, 1500);
     return () => clearInterval(interval);
   }, [setPosition, isPaused]);
-
+  const isMobile = window.innerWidth < 768;
+  const targetSize = isMobile ? "60px" : "100px"; 
   return (
     <img
       src={character === "Allen" ? "/assets/Allen_Normal.png" : "/assets/Shaila_Normal.png"}
       alt={character}
       className={`target ${isHit ? "fire-effect" : ""}`}
-      style={{ ...position, width: "100px", height: "auto", position: "absolute" }}
+      style={{ ...position, width: targetSize, height: "auto", position: "absolute" }}
     />
   );
   
