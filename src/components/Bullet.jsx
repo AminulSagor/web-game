@@ -64,6 +64,12 @@ const Bullet = ({ id, startX, startY, targetX, targetY, onRemove, increaseScore 
           fireImage.style.left = `${targetRect.left + targetRect.width / 2 - 50}px`;
           fireImage.style.top = `${targetRect.top + targetRect.height / 2 - 50}px`;
 
+          fireImage.style.borderRadius = "50%";
+          fireImage.style.overflow = "hidden"; 
+          fireImage.style.objectFit = "contain";  // Ensures the full image fits inside
+          fireImage.style.objectPosition = "center";  // Centers the image inside the circle
+          fireImage.style.backgroundColor = "transparent"; // Prevents any background color issues
+
           // 🔹 Initial state for smooth transition
           fireImage.style.opacity = "0";
           fireImage.style.transform = "scale(0.5)";
