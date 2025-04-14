@@ -1,6 +1,6 @@
 // src/utils/validation.js
 export const validateEmail = (email) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return /^[^\s@]+@[^\s@]+\.com$/.test(email);
   };
   
   export const validateName = (name) => {
