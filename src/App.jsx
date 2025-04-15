@@ -20,6 +20,7 @@ const App = () => {
       <Route path="/" element={<RegisterForm onRegister={handleRegister} />} />
       <Route path="/choose-character" element={<ChooseCharacter />} />
       <Route path="/game" element={<GunManager />} />
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );
 };
