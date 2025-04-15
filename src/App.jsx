@@ -4,6 +4,7 @@ import RegisterForm from "./pages/RegisterPage";
 import ChooseCharacter from "./pages/ChooseCharacter";
 import GunManager from "./components/GunManager"; // Wrapper for dynamic switching
 import "./style/game.css";
+import AdminPage from './pages/AdminPage';
 
 const App = () => {
   const navigate = useNavigate();
