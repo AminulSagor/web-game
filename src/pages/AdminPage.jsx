@@ -5,6 +5,7 @@ import { validateEmail } from "../utils/validation";
 
 const AdminPage = () => {
   const [validEmails, setValidEmails] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,8 +13,10 @@ const AdminPage = () => {
       try {
         const querySnapshot = await getDocs(collection(db, "gameUser"));
         const emails = [];
+        let total = 0;
 
         querySnapshot.forEach((doc) => {
+          total++;
           const data = doc.data();
           if (validateEmail(data.email)) {
             emails.push(data.email);
@@ -21,6 +24,7 @@ const AdminPage = () => {
         });
 
         setValidEmails(emails);
+        setTotalCount(total);
       } catch (error) {
         console.error("Error fetching emails:", error);
       } finally {
@@ -56,7 +60,9 @@ const AdminPage = () => {
           <p>Loading...</p>
         ) : (
           <>
-            <p style={{ marginBottom: "15px" }}>✅ Valid Email Count: <b>{validEmails.length}</b></p>
+            <p>📦 Total Emails: <b>{totalCount}</b></p>
+            <p>✅ Valid Emails: <b>{validEmails.length}</b></p>
+            <p>❌ Invalid Emails: <b>{totalCount - validEmails.length}</b></p>
             <div style={{
               maxHeight: "300px",
               overflowY: "auto",
@@ -64,7 +70,8 @@ const AdminPage = () => {
               padding: "10px",
               border: "1px solid #444",
               borderRadius: "8px",
-              background: "#1a1a1a"
+              background: "#1a1a1a",
+              marginTop: "20px"
             }}>
               <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 {validEmails.map((email, index) => (
